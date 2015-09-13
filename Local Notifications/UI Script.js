@@ -37,7 +37,6 @@
 					n.onclick = function() {
 						window.open(messages[i].getAttribute("url"));
 					};
-					break;
 				}
 
 				localStorage.setItem("LocalNotifications_sysparm_last_poll_datetime", now());

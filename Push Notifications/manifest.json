@@ -1,11 +1,11 @@
 {
-	"name": "Push Demo",
-	"short_name": "Push Demo",
+	"name": "ServiceNow Push Notification Example",
+	"short_name": "SN Push",
 	"icons": [{
 		"src": "images/icon-192x192.png",
 		"sizes": "192x192"
 	}],
-	"start_url": "./index.html?homescreen=1",
+	"start_url": "/navpage.do",
 	"display": "standalone",
 	"gcm_sender_id": "<Your Project Number from https://console.developers.google.com>",
 

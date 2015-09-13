@@ -13,19 +13,16 @@ To do so,
 - The Table and Field Name should have been pre-filled.
 - Put `max-height: 100px !important;` in the Style field and Submit/Update.
 
-## To all Record Producers form
+## To all forms in ServiceNow
 If you would like to apply this change to every textarea field in the system, you can create a UI Script like,
 
 ```
 document.observe('dom:loaded', function() {
-    // Only include the extra stylesheet if we are in the Record Producer screen
-    if ((typeof g_form != 'undefined') && ('GlideForm' == g_form.type)) {
-        document.styleSheets[0].insertRule("HTML[data-doctype=true] textarea { max-height: 100px !important; }", 0);
-    }
+    document.styleSheets[0].insertRule("HTML[data-doctype=true] textarea { max-height: 100px !important; }", 0);
 });
 ```
 
-Alternatively, you can copy the codes from [UI Script - All Record Producers.js](./UI Script - All Record Producers.js) in this folder.
+Alternatively, you can copy the codes from [UI Script - Global.js](./UI Script - Global.js) in this folder.
 
 ## To only Problem and/or Incident form
 In ServiceNow, each application would have its own form ID. For example:
@@ -36,12 +33,23 @@ We can adjust the CSS to target specifically to a partcular application if neede
 
 ```
 document.observe('dom:loaded', function() {
-    // Only include the extra stylesheet if we are in the Record Producer screen
-    if ((typeof g_form != 'undefined') && ('GlideForm' == g_form.type)) {
-        // You can also change #problem\\.do to #incident\\.do if you want to apply the new max-height to the Incident Form only.
-        document.styleSheets[0].insertRule("HTML[data-doctype=true] #problem\\.do textarea { max-height: 100px !important; }", 0);
-    }
+    // You can also change #problem\\.do to #incident\\.do if you want to apply the new max-height to the Incident Form only.
+    document.styleSheets[0].insertRule("HTML[data-doctype=true] #problem\\.do textarea { max-height: 100px !important; }", 0);
 });
 ```
 
 You can copy the codes from [UI Script - Problem Form Only.js](./UI Script - Problem Form Only.js) in this folder.
+
+## To only Record Producer record in Service Catalog
+If you need to target the Record Producer definition form, you should target the CSS rule to this ID `sc_cat_item_producer.do`.
+
+However, if you need to target the Record Producer record in the Service Catalog, you should target the CSS rule to #item_table instead.
+
+```
+document.observe('dom:loaded', function() {
+    // #item_table should be the unique ID available when you view the Record Producer in the Service Catalog
+    document.styleSheets[0].insertRule("HTML[data-doctype=true] #item_table textarea { max-height: 100px !important; }", 0);
+});
+```
+
+You can copy the codes from [UI Script - Record Producer.js](./UI Script - Record Producer.js) in this folder.

@@ -12,6 +12,7 @@ LocalNotificationsAjax.prototype = Object.extendsObject(AbstractAjaxProcessor, {
 	getMessages: function() {
 		var gr = new GlideRecord('incident');
 
+		// Return all active incidents created after a specific date time
 		gr.addQuery('active', true);
 		gr.addQuery('sys_created_on', ">", this.getParameter('sysparm_last_poll_datetime'));
 		gr.query();

@@ -2,8 +2,8 @@
 Most [modern browsers](http://caniuse.com/#feat=notifications) nowadays implemented the HTML5 Notification API to allow any website to send notification to its users without any user interaction (i.e. not in focus).
 
 To enable Browser Notifications for ServiceNow, you need:
-1. an UI Script that regularly polls ServiceNow for any update in the background (via AJAX)
-2. a Script Include (Server Script) that responds to the AJAX poll
+- an UI Script that regularly polls ServiceNow for any update in the background (via AJAX)
+- a Script Include (Server Script) that responds to the AJAX poll
 
 You can copy and paste the script in this folder into your ServiceNow instance to try. It should work for Fuji release. (I only have the Fuji Dev Instance for testing.)
 

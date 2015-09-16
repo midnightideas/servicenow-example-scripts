@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+UI Page HTML
+
+Name: bing_map_page_primary
+Category: General
+-->
+<j:jelly trim="false" xmlns:g2="null" xmlns:g="glide" xmlns:j2="null" xmlns:j="jelly:core">
+	<script src="/scripts/classes/GwtMap.jsx"></script>
+	<script src="/scripts/classes/GwtMapMarker.jsx"></script>
+	<script src="/scripts/classes/GlideRecord.jsx"></script>
+	<script src="https://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0&amp;s=1"></script>
+	<style>
+		.timingDiv {
+			display: none;
+		}
+	</style>
+	<div id="map" style="width: 100%; height: 100%"></div>
+</j:jelly>

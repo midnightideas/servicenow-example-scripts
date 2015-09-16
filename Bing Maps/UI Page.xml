@@ -10,5 +10,10 @@ Category: General
 	<script src="/scripts/classes/GwtMapMarker.jsx"></script>
 	<script src="/scripts/classes/GlideRecord.jsx"></script>
 	<script src="https://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0&amp;s=1"></script>
-	<div id="map" style="position: absolute; z-index: 9999; width: 100%; height: 100%"></div>
+	<style>
+		.timingDiv {
+			display: none;
+		}
+	</style>
+	<div id="map" style="width: 100%; height: 100%"></div>
 </j:jelly>

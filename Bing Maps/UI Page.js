@@ -99,10 +99,12 @@
 			center: new Microsoft.Maps.Location(this.options["mapCenterLat"], this.options["mapCenterLng"]),
 			mapTypeId: mapTypeId
 		})
+
+		var self = this;
 		Microsoft.Maps.loadModule('Microsoft.Maps.Search', {
 			callback: function() {
-				this.map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(this.map));
-				this.geocoder = this.map.getComponent('searchManager');
+				self.map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(self.map));
+				self.geocoder = self.map.getComponent('searchManager');
 			}
 		});
 		this.center();
@@ -125,6 +127,54 @@
 				this.map.setView({
 					center: new Microsoft.Maps.Location(this.options["mapCenterLat"], this.options["mapCenterLng"])
 				});
+		}
+	};
+	GwtMapMarker.prototype._draw = function() {
+		var latlng = new Microsoft.Maps.Location(this.lat, this.lng);
+		var pushpinOptions = {
+			icon: this.icon,
+			width: parseFloat(this.iconWidth),
+			height: this.iconHeight,
+			text: this.markerLabel,
+			visible: true,
+			textOffset: new Microsoft.Maps.Point(this.labelOffsetLeft * -1, this.labelOffsetTop * -1)
+		};
+
+		if (!this.lat || !this.lng) {
+			return;
+		}
+		var pushpin = new Microsoft.Maps.Pushpin(latlng, pushpinOptions);
+
+		if (this.html) {
+			var _this = this;
+			Microsoft.Maps.Events.addHandler(pushpin, 'click', function() {
+				if (GwtMapMarker.infowindow && _this.autoClose == 'true')
+					this.map.map.entities.remove(GwtMapMarker.infowindow);
+
+				GwtMapMarker.infowindow = new Microsoft.Maps.Infobox(map.getCenter(), infoboxOptions);
+				GwtMapMarker.infowindow.setHtmlContent(_this.html);
+
+				this.map.map.entities.push(defaultInfobox);
+			});
+		} else {
+			Microsoft.Maps.Events.addHandler(pushpin, 'click', this._onClick.bind(this));
+		}
+
+		this.map.map.entities.push(pushpin);
+	};
+	GwtMapMarker.prototype._resolveAddress = function() {
+		var request = {
+			where: this.address,
+			callback: this._onResolveAddress.bind(this)
+		};
+		this.map.geocoder.geocode(request);
+	};
+	GwtMapMarker.prototype._onResolveAddress = function(result, userData) {
+		var topResult = result.results && result.results[0];
+		if (topResult) {
+			this.lat = topResult.latitude;
+			this.lng = topResult.longitude;
+			this._draw();
 		}
 	};
 

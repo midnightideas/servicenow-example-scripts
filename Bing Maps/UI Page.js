@@ -10,6 +10,18 @@
 
 	// START - Codes reproduced from $map_page_primary.do
 	function loadMap() {
+		var match,
+			pl = /\+/g, // Regex for replacing addition symbol with a space
+			search = /([^&=]+)=?([^&]*)/g,
+			decode = function(s) {
+				return decodeURIComponent(s.replace(pl, " "));
+			},
+			query = window.location.search.substring(1);
+
+		urlParams = {};
+		while (match = search.exec(query))
+			urlParams[decode(match[1])] = decode(match[2]);
+
 		var map = new GwtMap('map', 'com.glideapp.google_maps.AJAXMapProcessor');
 		var coords = newLongLat();
 
@@ -21,8 +33,8 @@
 
 		map.setCenter(coords.lat, coords["long"]);
 		map.setZoom('4');
-		map.addParam('sysparm_name', 'Critical incidents'); // TODO read from query string
-		map.addParam('sysparm_sys_id', '');
+		map.addParam('sysparm_name', urlParams['sysparm_name'] || '');
+		map.addParam('sysparm_sys_id', urlParams['sysparm_sys_id'] || '');
 		map.addParam('sysparm_auto_close', 'true');
 		map.draw();
 	}

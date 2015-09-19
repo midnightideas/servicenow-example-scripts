@@ -47,7 +47,8 @@ if ("/kb_view.do" == window.location.pathname) {
 				checkBrokenLink(href, function(success) {
 					if (!success) {
 						// Create a small hover title to alert user that this link may be broken.
-						var tooltip = link.getAttribute("data-original-title") + " (This link may be broken. A incidient ticket has already been raiesd.)";
+						var originalTitle = link.getAttribute("data-original-title");
+						var tooltip = originalTitle + " (This link may be broken. A incidient ticket has already been raiesd.)";
 						link.setAttribute("data-title", tooltip);
 						link.setAttribute("data-original-title", tooltip);
 
@@ -55,6 +56,13 @@ if ("/kb_view.do" == window.location.pathname) {
 						// However, eventually, it's up to you how you want to manage the end user
 						// expectation on broken link.
 						link.style.color = "red";
+
+						var ga = new GlideAjax('ReportKbBrokenLinksAjax');
+						ga.addParam("sysparm_name", "reportBrokenLink");
+						ga.addParam("sysparm_location_href", location.href);
+						ga.addParam("sysparm_title", originalTitle);
+						ga.addParam("sysparm_broken_link", href);
+						ga.getXML();
 					}
 				});
 			})(all_links[i]);

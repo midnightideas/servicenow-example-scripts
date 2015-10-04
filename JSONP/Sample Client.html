@@ -1,0 +1,34 @@
+<html>
+
+<head>
+	<title>ServiceNow JSONP Example</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+	<div>ServiceNow JSONP Example</div>
+	<div>Remember, you must run this HTML from a web server. Don't open it with file://</div>
+
+	<script>
+		$.ajax({
+			url: "https://dev12001.service-now.com/jsonp.do",
+			jsonp: "sysparm_callback",
+			dataType: "jsonp",
+			data: {
+				"sysparm_api": "https://dev12001.service-now.com/api/now/table/incident?sysparm_limit=10",
+				"sysparm_user": "admin",
+				"sysparm_password": "admin",
+				"sysparm_direct": "true"
+			},
+			success: function(response) {
+				console.log(response);
+				document.getElementById("response").innerHTML = JSON.stringify(response);
+			}
+		});
+	</script>
+
+	<div id="response">
+	</div>
+</body>
+
+</html>

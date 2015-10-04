@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:g2="null" xmlns:g="glide" xmlns:j2="null" xmlns:j="jelly:core">
+	<g:evaluate jelly="true" var="jvar_js">
+		<![CDATA[
+
+// This is where you server side logic should reside.
+
+// If you webhook in Jira is https://instancename.service-now.com/webhook.do
+
+// You can use RP.getParameterValue("querystringParameterName") to get the query string value.
+
+// RP.getParameterValue() should also works for form POST value.
+
+		]]>
+	</g:evaluate>
+</j:jelly>

@@ -4,9 +4,19 @@
  * UI Page Name: bing_map_page_primary
  */
 (function() {
+	// BING MAPS CONFIGURATIONS
+
 	// Replace with your own Bing Maps Application Key
 	// You can get one from https://www.bingmapsportal.com/
 	var APPLICATION_KEY = 'AhDA2jKu4ZDlFWyh639n8S2YwUAwEMQ4lwKdMq08h-Je4KYBOmGYJcbskmRDV-bP';
+
+	// Bing Maps does not have the abilty to scale icons like Google Maps does.
+	// Therefore, you must specify an external image scaling proxy. All icon image must be
+	// in absolute path with protocol (i.e. http://) specified explicity for any scaling proxy
+	// to work. Comment out the the following line if you don't need to auto scale icons
+	var AUTO_SCALE_HELPER = "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?url={url}&&container=focus&resize_w={width}&resize_h={height}";
+
+	// END - BING MAPS CONFIGURATIONS
 
 	// START - Codes reproduced from $map_page_primary.do
 	function loadMap() {
@@ -112,14 +122,15 @@
 			mapTypeId: mapTypeId
 		})
 
-		var self = this;
+		var _this = this;
 		Microsoft.Maps.loadModule('Microsoft.Maps.Search', {
 			callback: function() {
-				self.map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(self.map));
-				self.geocoder = self.map.getComponent('searchManager');
+				_this.map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(_this.map));
+				_this.geocoder = _this.map.getComponent('searchManager');
 			}
 		});
 		this.center();
+
 	};
 	GwtMap.prototype.center = function(lat, lng, zoom) {
 		if (lat && lng) {
@@ -152,6 +163,10 @@
 			textOffset: new Microsoft.Maps.Point(this.labelOffsetLeft * -1, this.labelOffsetTop * -1)
 		};
 
+		if (AUTO_SCALE_HELPER) {
+			pushpinOptions.icon = AUTO_SCALE_HELPER.replace('{url}', encodeURIComponent(this.icon)).replace('{width}', this.iconWidth).replace('{height}', this.iconHeight);
+		}
+
 		if (!this.lat || !this.lng) {
 			return;
 		}
@@ -160,13 +175,26 @@
 		if (this.html) {
 			var _this = this;
 			Microsoft.Maps.Events.addHandler(pushpin, 'click', function() {
-				if (GwtMapMarker.infowindow && _this.autoClose == 'true')
-					this.map.map.entities.remove(GwtMapMarker.infowindow);
+				if (GwtMapMarker.infowindow && _this.autoClose == 'true') {
+					_this.map.map.entities.remove(GwtMapMarker.infowindow);
+				}
 
-				GwtMapMarker.infowindow = new Microsoft.Maps.Infobox(map.getCenter(), infoboxOptions);
-				GwtMapMarker.infowindow.setHtmlContent(_this.html);
+				infoboxOptions = {
+					offset: new Microsoft.Maps.Point(0, 20),
+					description: _this.html
+				};
+				GwtMapMarker.infowindow = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(_this.lat, _this.lng), infoboxOptions);
 
-				this.map.map.entities.push(defaultInfobox);
+				_this.map.map.entities.push(GwtMapMarker.infowindow);
+
+				// cm1011_etr is an internal/undocumented variable for Bing Maps to track the DOM structure of the marker.
+				// It may be changed by Microsoft without notice. It exists only after you push the marker to the
+				// entities array. Sorry, I can't find anything you may use in the documentation so I have to go with
+				// undocumented API.
+				var height = GwtMapMarker.infowindow.cm1011_etr.descriptionNode.getHeight();
+				GwtMapMarker.infowindow.setOptions({
+					height: height
+				});
 			});
 		} else {
 			Microsoft.Maps.Events.addHandler(pushpin, 'click', this._onClick.bind(this));

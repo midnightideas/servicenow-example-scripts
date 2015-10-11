@@ -4,9 +4,19 @@
  * UI Page Name: bing_map_page_primary
  */
 (function() {
+	// BING MAPS CONFIGURATIONS
+
 	// Replace with your own Bing Maps Application Key
 	// You can get one from https://www.bingmapsportal.com/
 	var APPLICATION_KEY = 'AhDA2jKu4ZDlFWyh639n8S2YwUAwEMQ4lwKdMq08h-Je4KYBOmGYJcbskmRDV-bP';
+
+	// Bing Maps does not have the abilty to scale icons like Google Maps does.
+	// Therefore, you must specify an external image scaling proxy. All icon image must be
+	// in absolute path with protocol (i.e. http://) specified explicity for any scaling proxy
+	// to work. Comment out the the following line if you don't need to auto scale icons
+	var AUTO_SCALE_HELPER = "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?url={url}&&container=focus&resize_w={width}&resize_h={height}";
+
+	// END - BING MAPS CONFIGURATIONS
 
 	// START - Codes reproduced from $map_page_primary.do
 	function loadMap() {
@@ -151,6 +161,10 @@
 			visible: true,
 			textOffset: new Microsoft.Maps.Point(this.labelOffsetLeft * -1, this.labelOffsetTop * -1)
 		};
+
+		if (AUTO_SCALE_HELPER) {
+			pushpinOptions.icon = AUTO_SCALE_HELPER.replace('{url}', encodeURIComponent(this.icon)).replace('{width}', this.iconWidth).replace('{height}', this.iconHeight);
+		}
 
 		if (!this.lat || !this.lng) {
 			return;

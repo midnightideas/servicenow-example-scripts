@@ -122,14 +122,15 @@
 			mapTypeId: mapTypeId
 		})
 
-		var self = this;
+		var _this = this;
 		Microsoft.Maps.loadModule('Microsoft.Maps.Search', {
 			callback: function() {
-				self.map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(self.map));
-				self.geocoder = self.map.getComponent('searchManager');
+				_this.map.addComponent('searchManager', new Microsoft.Maps.Search.SearchManager(_this.map));
+				_this.geocoder = _this.map.getComponent('searchManager');
 			}
 		});
 		this.center();
+
 	};
 	GwtMap.prototype.center = function(lat, lng, zoom) {
 		if (lat && lng) {

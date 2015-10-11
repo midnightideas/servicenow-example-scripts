@@ -175,13 +175,26 @@
 		if (this.html) {
 			var _this = this;
 			Microsoft.Maps.Events.addHandler(pushpin, 'click', function() {
-				if (GwtMapMarker.infowindow && _this.autoClose == 'true')
-					this.map.map.entities.remove(GwtMapMarker.infowindow);
+				if (GwtMapMarker.infowindow && _this.autoClose == 'true') {
+					_this.map.map.entities.remove(GwtMapMarker.infowindow);
+				}
 
-				GwtMapMarker.infowindow = new Microsoft.Maps.Infobox(map.getCenter(), infoboxOptions);
-				GwtMapMarker.infowindow.setHtmlContent(_this.html);
+				infoboxOptions = {
+					offset: new Microsoft.Maps.Point(0, 20),
+					description: _this.html
+				};
+				GwtMapMarker.infowindow = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(_this.lat, _this.lng), infoboxOptions);
 
-				this.map.map.entities.push(defaultInfobox);
+				_this.map.map.entities.push(GwtMapMarker.infowindow);
+
+				// cm1011_etr is an internal/undocumented variable for Bing Maps to track the DOM structure of the marker.
+				// It may be changed by Microsoft without notice. It exists only after you push the marker to the
+				// entities array. Sorry, I can't find anything you may use in the documentation so I have to go with
+				// undocumented API.
+				var height = GwtMapMarker.infowindow.cm1011_etr.descriptionNode.getHeight();
+				GwtMapMarker.infowindow.setOptions({
+					height: height
+				});
 			});
 		} else {
 			Microsoft.Maps.Events.addHandler(pushpin, 'click', this._onClick.bind(this));
